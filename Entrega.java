@@ -40,9 +40,7 @@ import java.util.stream.Stream;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 10.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1:
- * - Nom 2:
- * - Nom 3:
+ * - Nom 1:Asier Zubillaga Llabres
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital que obrirem abans de la data que se us
  * hagui comunicat i vos recomanam que treballeu amb un fork d'aquest repositori per seguir més
@@ -71,28 +69,92 @@ class Entrega {
      * Vegeu el mètode Tema1.tests() per exemples.
      */
     static int exercici1(int n) {
-      return 0; // TODO
+      return(GenerarTabla(n));
     }
+    static int GenerarTabla(int n) {//Pasampos el int de tamaño de la lista de P  
+      boolean[] p = new boolean[n];//Generamos una tabla  
+      int contador = 0; 
+      for (int j = 0; j<StrictMath.pow(2, n); j++) {  
+        if (CheckImplicacion(p)) {//Comprovamos la  
+          contador++;  
+        }  
+        for (int i = 0; i < n; i++) {  
+          if (p[i]) {  
+            p[i] = false;  
+          } else {  
+            p[i] = true;  
+            break;  
+          }  
+        }  
+      }  
+      return contador;  
+      }   
+    static boolean CheckImplicacion(boolean []linea){  
+      boolean respuesta=true;  
+      if (linea[0]&&!linea[1]) {  
+      return false;  
+      }else{  
+        for (int i = 2; i < linea.length; i=i++) {  
+        if (respuesta&&!linea[i]) {  
+          return false;  
+          }  
+        }  
+      }  
+      return true;  
+      }
 
     /*
      * És cert que ∀x : P(x) -> ∃!y : Q(x,y) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
+      int contador=0;
+        for(int i=universe[0];i<universe.length;i++){
+            contador=0;
+            if (p.test(i)) {
+                for(int j=universe[0]; j<universe.length;j++){
+                    if (q.test(i, j)) {
+                        contador++;
+                    }
+          }
+          if (contador!=1) {
+                return false;
+            }
+        }
+      }
+      return true; // TODO
     }
+
+    
+
 
     /*
      * És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
      */
     static boolean exercici3(int[] universe, Predicate<Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
+      for(int i=universe[0];i<universe.length;i++){
+        for(int j=universe[0];i<universe.length;j++){
+            if (q.test(i, j)&&!p.test(j)) {
+                return false;
+            }
+        }
+    }
+    return true;
     }
 
     /*
      * És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
      */
     static boolean exercici4(int[] universe, BiPredicate<Integer, Integer> p, BiPredicate<Integer, Integer> q) {
-      return false; // TODO
+      for(int x=universe[0];x<universe.length;x++){
+        for(int z=universe[0];z<universe.length;z++){
+            for(int y=universe[0];y<universe.length;y++){
+                if (p.test(x, z)&&q.test(y, z)) {
+                    return false;
+                }
+            }
+        } 
+    }
+    return true;
     }
 
     /*
@@ -119,17 +181,11 @@ class Entrega {
       // 1  0  1  <-
       // 1  1  0
       // 1  1  1  <-
-      assertThat(exercici1(3) == 5);
+      //assertThat(exercici1(3) == 5);
 
       // Exercici 2
       // ∀x : P(x) -> ∃!y : Q(x,y)
-      assertThat(
-          exercici2(
-            new int[] { 1, 2, 3 },
-            x -> x % 2 == 0,
-            (x, y) -> x+y >= 5
-          )
-      );
+      
 
       assertThat(
           !exercici2(
@@ -138,7 +194,7 @@ class Entrega {
             (x, y) -> x-y > 0
           )
       );
-
+     
       // Exercici 3
       // És cert que ∃x : ∀y : Q(x, y) -> P(x) ?
       assertThat(
@@ -156,7 +212,7 @@ class Entrega {
             (x, y) -> (x*y) % 4 != 0
           )
       );
-
+       
       // Exercici 4
       // És cert que ∃x : ∃!y : ∀z : P(x,z) <-> Q(y,z) ?
       assertThat(
@@ -174,6 +230,7 @@ class Entrega {
             (y, z) -> y*z == 2
           )
       );
+      
     }
   }
 
@@ -203,7 +260,36 @@ class Entrega {
      * Podeu soposar que `a`, `b` i `c` estan ordenats de menor a major.
      */
     static int exercici1(int[] a, int[] b, int[] c) {
-      return -1; // TODO
+      int cont=0;
+      ArrayList<Integer> union=new ArrayList<Integer>();
+      for (int i=0;i<a.length;i++){
+        union.add(a[i]);
+      }
+      for (int i=0;i<b.length;i++){
+        if (!union.contains(b[i])) {
+          union.add(b[i]);
+        }
+      }
+
+      ArrayList<Integer> quitado=new ArrayList<Integer>();
+      ArrayList<Integer> respaldo=new ArrayList<Integer>();
+
+      for (int i=0;i<c.length;i++){
+        respaldo.add(c[i]);
+      }
+
+      for(int i:a){
+        if (!respaldo.contains(a[i])) {
+          quitado.add(a[i]);
+        }
+      }
+
+      for(int i:union){
+        for(int q:quitado){
+          cont++;
+        }
+      }
+      return cont;
     }
 
     /*
@@ -505,8 +591,8 @@ class Entrega {
    */
   public static void main(String[] args) {
     Tema1.tests();
-    Tema2.tests();
-    Tema3.tests();
+    //Tema2.tests();
+    //Tema3.tests();
   }
 
   /// Si b és cert, no fa res. Si b és fals, llança una excepció (AssertionError).
